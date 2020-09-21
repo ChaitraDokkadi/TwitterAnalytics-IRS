@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <link rel="shortcut icon" href="static/img/favicon.ico">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+  <title>
+    Tweets Analyzer
+  </title>
+  <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
+
+  <!--     Fonts and icons     -->
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" />
+  <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+
+  <!-- CSS Files -->
+  <link href="static/css/bootstrap-ui.css" rel="stylesheet">
+  <link href="static/css/dashboard.css?v=1.2.0" rel="stylesheet">
+
+  <!--   Core JS Files   -->
+  <script src="js/core/jquery.min.js"></script>
+  <script src="js/core/popper.min.js"></script>
+  <script src="js/core/bootstrap.min.js"></script>
+  <script src="js/plugins/perfect-scrollbar.jquery.min.js"></script>
+  <script src="https://cdn.anychart.com/js/8.0.1/anychart-core.min.js"></script>
+  <script src="https://cdn.anychart.com/js/8.0.1/anychart-pie.min.js"></script>
+
+  <!-- Chart JS -->
+  <script src="js/plugins/chartjs.min.js"></script>
+
+  <!--  Notifications Plugin    -->
+  <script src="js/plugins/bootstrap-notify.js"></script>
+
+  <!-- Control Center for Now Ui Dashboard: parallax effects, scripts for the example pages etc -->
+  <script src="js/dashboard-ui.js?v=1.2.0" type="text/javascript"></script>
+</head>
+
+<body class="" onload="pieChart()">
+  <div class="wrapper ">
+    <div class="sidebar" data-color="red">
+
+      <div class="logo">
+        <a href="https://www.google.com/" class="simple-text logo-mini">
+          GiG
+        </a>
+        <a href="https://www.google.com/" class="simple-text logo-normal">
+          Google is God
+        </a>
+      </div>
+      <!--Sidebar data feed-->
+      <div class="sidebar-wrapper">
+        <ul class="nav" style="color: #011f4b">
+          <center>You have queried:</center>
+          <li class="active ">
+              <i class="now-ui-icons design_app"></i>
+              Query:<p>{{query}}</p>
+              <i class="now-ui-icons design_app"></i>
+              City:<p>{{city}}</p>
+              <i class="now-ui-icons design_app"></i>
+              Topic:<p>{{topic}}</p>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+    <!--Main panel start-->
+    <div class="main-panel">
+
+      <!-- Navbar -->
+      <nav class="navbar navbar-expand-lg fixed-top navbar-transparent  bg-primary  navbar-absolute">
+        <a class="navbar-brand" href="#pablo">Dashboard</a>
+      </nav>
+      <!-- End Navbar -->
+
+      <div class="panel-header panel-header-lg">
+        <canvas id="bigDashboardChart"></canvas>
+      </div>
+
+      <!--Content start-->
+      <div class="content">
+        <!--Row 1 start-->
+        <div class="row">
+          <!--Analytics 1-->
+          <div class="col-md-3">
+            <div class="card card-chart">
+              <div class="card-header">
+                <h5 class="card-category">Analytics</h5>
+                <h4 class="card-title">Sentiment Analysis</h4>
+              </div>
+                <div class="chart-area" id="sentiment-chart" style="height:225px;">
+                  <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+                  <script type='text/javascript'>
+                      google.load('visualization', '1', {packages: ['corechart', 'bar']});
+                      google.setOnLoadCallback(drawBasic);
+                      function drawBasic() {
+                            var data = google.visualization.arrayToDataTable([
+                              ['Sentiment', 'Percentage', { role: 'style' }],
+                              ['Positive',{{positivePer}}, 'gold'],
+                              ['Neutral',{{neutralPer}}, 'silver'],
+                              ['Negative',{{negativePer}}, 'brown'],
+                            ]);
+                            var options = {
+                              chartArea: {width: '70%'},
+                              is3D: true,
+                              hAxis: {
+                                title: 'Percentage',
+                                minValue: 0
+                              },
+                              vAxis: {
+                                title: 'Sentiment'
+                              }
+                            };
+                            var chart = new google.visualization.PieChart(document.getElementById('sentiment-chart'));
+                            chart.draw(data, options);
+                          }
+                  </script>
+                </div>
+            </div>
+          </div>
+          <!--Analytics 1 End-->
+          <!--Analytics 2-->
+          <div class="col-md-3">
+            <div class="card card-chart">
+              <div class="card-header">
+                <h5 class="card-category">Analytics</h5>
+                <h4 class="card-title">Topics Analysis</h4>
+              </div>
+                <div class="chart-area" id="topic-chart" style="height:225px;">
+                  <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+                  <script type='text/javascript'>
+                      google.load('visualization', '1', {packages: ['corechart']});
+                      google.setOnLoadCallback(drawBasic);
+                      function drawBasic() {
+                            var data = google.visualization.arrayToDataTable([
+                              ['Topic', 'Count', { role: 'style' }],
+                              ['Social Unrest',{{topic_analysis[0]}}, 'gold'],
+                              ['Infra',{{topic_analysis[1]}}, 'silver'],
+                              ['Environment',{{topic_analysis[2]}}, 'brown'],
+                              ['Crime',{{topic_analysis[3]}}, 'red'],
+                              ['Politics',{{topic_analysis[4]}}, 'green'],
+                            ]);
+                            var options = {
+                              chartArea: {width: '70%'},
+                              is3D: true,
+                              hAxis: {
+                                title: 'Count',
+                                minValue: 0
+                              },
+                              vAxis: {
+                                title: 'Topics'
+                              }
+                              bubble: {textStyle: {fontsize:11}}
+                            };
+                            var chart = new google.visualization.BubbleChart(document.getElementById('topic-chart'));
+                            chart.draw(data, options);
+                          }
+                  </script>
+                </div>
+            </div>
+          </div>
+          <!--Analytics 2 End-->
+          <!--Analytics 3 Start-->
+          <div class="col-md-3">
+            <div class="card card-chart">
+              <div class="card-header">
+                <h5 class="card-category">Analytics</h5>
+                <h4 class="card-title">City Analysis</h4>
+              </div>
+                <div class="chart-area" id="city-chart" style="height:225px;">
+                  <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+                  <script type='text/javascript'>
+                      google.load('visualization', '1', {packages: ['corechart', 'bar']});
+                      google.setOnLoadCallback(drawBasic);
+                      function drawBasic() {
+                            var data = google.visualization.arrayToDataTable([
+                              ['City', 'Count', { role: 'style' }],
+                              ['New York City',{{city_analysis[0]}}, 'gold'],
+                              ['New Delhi',{{city_analysis[4]}}, 'silver'],
+                              ['Mexico City',{{city_analysis[1]}}, 'brown'],
+                              ['Bangkok',{{city_analysis[3]}}, 'red'],
+                              ['Paris',{{city_analysis[2]}}, 'green'],
+                            ]);
+                            var options = {
+                              chartArea: {width: '70%'},
+                              is3D: true,
+                              hAxis: {
+                                title: 'Count',
+                                minValue: 0
+                              },
+                              vAxis: {
+                                title: 'City'
+                              }
+                            };
+                            var chart = new google.visualization.PieChart(document.getElementById('city-chart'));
+                            chart.draw(data, options);
+                          }
+                  </script>
+                </div>
+            </div>
+          </div>
+          <!--Analytics 3 End-->
+          <!--Analytics 4 Start-->
+          <div class="col-md-3">
+            <div class="card card-chart">
+              <div class="card-header">
+                <h5 class="card-category">Analytics</h5>
+                <h4 class="card-title">Wordcloud</h4>
+              </div>
+                <div class="chart-area" id="wordcloud" style="height:225px;">
+                  <a href="#"><img src="static/img/Hashtag.png" ></a>
+                </div>
+            </div>
+          </div>
+          <!--Analytics 4 End-->
+        </div>
+        <!--Row 1 Ends-->
+        <!--Row 2 starts-->
+          <!--Trending-->
+        <div class="row">
+          <div class="col-md-3">
+            <div class="card  card-tasks">
+              <div class="card-header ">
+                <h5 class="card-category">Tweets</h5>
+                <h4 class="card-title">Trending</h4>
+              </div>
+              <div class="card-body ">
+                <div class="table-full-width table-responsive">
+                  <table class="table">
+                    <thead class=" text-primary">
+                      <th>
+                        Text
+                      </th>
+                    </thead>
+                    <tbody>
+                      {% for tweet in trending_hashtags %}
+                      <tr>
+                        <td>{{tweet}}</td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--Trending End-->
+                  <!--Collected data-->
+		  <div class="col-md-9">
+			<div class="card">
+              <div class="card-header">
+                <h5 class="card-category">Tweets</h5>
+                <h4 class="card-title">Collected Data</h4>
+              </div>
+              <div class="card-body" >
+                <div class="table-responsive">
+                  <table class="table">
+                    <thead class=" text-primary">
+                      <th>
+                        Text
+                      </th>
+                    </thead>
+                    <tbody>
+                    {% for tweet in tweets %}
+                      <tr>
+                        <td>{{tweet}}</td>
+                      </tr>
+                    {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--Collected data End-->
+          <!--Row 2 ends-->
+    </div>
+        <!--Content end-->
+  </div>
+      <!--Main panel end-->
+    </div>
+      <!--Wrapper end-->
+  </div>
+  <!--   Core JS Files   -->
+  <script src="js/core/jquery.min.js"></script>
+  <script src="js/core/popper.min.js"></script>
+  <script src="js/core/bootstrap.min.js"></script>
+  <script src="js/plugins/perfect-scrollbar.jquery.min.js"></script>
+  <!--  Google Maps Plugin    -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>
+  <!-- Chart JS -->
+  <script src="js/plugins/chartjs.min.js"></script>
+  <!--  Notifications Plugin    -->
+  <script src="js/plugins/bootstrap-notify.js"></script>
+  <!-- Control Center for Now Ui Dashboard: parallax effects, scripts for the example pages etc -->
+  <script src="js/dashboard-ui.js?v=1.2.0" type="text/javascript"></script>
+  <script src="js/gchart.js" type="text/javascript"></script>
+</body>
+
+</html>
