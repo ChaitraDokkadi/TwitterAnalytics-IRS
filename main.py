@@ -10,11 +10,16 @@ import matplotlib.pyplot as plt
 
 app = Flask(__name__)
 try:
-	key = json.loads('./util/Secret.json')
-except:
+	with open('./util/Secret.json') as secretFile:
+		key = json.load(secretFile)
+except FileNotFoundError:
 	print('Save the secret key in Secret.json')
-app.config['SECRET_KEY'] = key['SECRET']
+try:
+	app.config['SECRET_KEY'] = key['SECRET']
+except KeyError:
+	print('Save the json file with "SECRET" as key')
 
+ 
 def clean_tweet(tweet):
     '''
     Utility function to clean tweet text by removing links, special characters
